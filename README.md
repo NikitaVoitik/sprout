@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sprout - AI-Powered Adaptive Learning Platform
 
-## Getting Started
+AI tutor that builds personalised 3D knowledge graphs using Claude agents. Describe a topic, upload notes, and watch a multi-agent system generate an adaptive learning network with diagnostics, tutoring, and hand-tracking navigation.
 
-First, run the development server:
+## Quick Start
+
+### Prerequisites
+- Node.js 20+
+- Python 3.10 + conda (for hand tracking, optional)
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/NikitaVoitik/sprout.git
+cd sprout
+npm install            # installs concurrently
+npm run install:all    # installs backend + frontend deps
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Configure Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env — add your ANTHROPIC_API_KEY and AWS credentials
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Frontend env is optional — defaults work for local development.
 
-## Learn More
+### Initialize Database
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run db:push
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Start Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev    # Starts backend (port 8000) + frontend (port 3000)
+```
 
-## Deploy on Vercel
+### Hand Tracking (Optional)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+conda create -n aircanvas python=3.10 -y
+conda activate aircanvas
+pip install -r tracking/requirements.txt
+npm run dev:all    # Starts all 3 services including tracking (port 8765)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| Backend | 8000 | Express API + Claude agents |
+| Frontend | 3000 | Next.js app |
+| Tracking | 8765 | Python WebSocket (hand tracking) |
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start backend + frontend |
+| `npm run dev:all` | Start all 3 services |
+| `npm run dev:backend` | Start backend only |
+| `npm run dev:frontend` | Start frontend only |
+| `npm run dev:tracking` | Start hand tracking only |
+| `npm run install:all` | Install deps in both subdirs |
+| `npm run build` | Build backend + frontend |
+| `npm run db:push` | Push schema to database |
+| `npm run db:migrate` | Run database migrations |
+| `npm run db:generate` | Generate migration files |
+
+## Architecture
+
+See [CLAUDE.md](./CLAUDE.md) for detailed architecture documentation and [AGENTS.md](./AGENTS.md) for agent system documentation.
